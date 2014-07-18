@@ -58,30 +58,12 @@ window.Board = {
   },
 
   clickedDiv: function (event) {
-    $thisCell = $(event.target);
-    this.toggleCell($thisCell);
+    $(event.currentTarget).data('Cell').toggle();
   },
 
   changeCell: function(x,y){
     $thisCell = $("#node-"+ x +"-"+ y);
     this.toggleCell($thisCell);
-  },
-
-  toggleCell: function (currentCell) {
-    $thisCell = currentCell
-    a = $thisCell.data().x;
-    b = $thisCell.data().y;
-
-    this.grid[a][b].toggle();
-
-    if ($thisCell.data().alive === true) {
-      $thisCell.data("alive", false);
-      $thisCell.removeClass('alive');
-    } else {
-      $thisCell.data("alive", true);
-      $thisCell.addClass('alive');
-    }
-    if (GOL.testing) console.log($thisCell.data())
   },
 
   startTimer: function () {
@@ -166,16 +148,26 @@ Cell = function Cell() {
   };
 
   Cell.prototype.node_div = function () {
-    this.$element = "<div data-alive='false' data-x='" + this.x + "' data-y='" + this.y + "' class='node' id='node-" + this.x + "-" + this.y + "'></div>";
+    this.$element = $("<div>");
+    this.$element.data({
+      alive: 'false',
+      x: this.x,
+      y: this.y,
+      Cell: this
+    });
+    this.$element.addClass('node').attr('id, ['node'',this.x,this.y].join('-');
   };
 
   Cell.prototype.toggle = function () {
 
     if (this.alive === true) {
       this.alive = false;
+      this.$element.removeClass('alive')
     } else {
       this.alive = true;
+      this.$element.addClass('alive')
     }
+    
     if (GOL.testing) console.log(this.x + "-" + this.y)
   };
 
