@@ -39,9 +39,7 @@ window.Board = {
     for (var x = 0; x < this.height; x++) {
       var new_column = [];
       for (var y = 0; y < this.width; y++) {
-        var new_node = new Cell();
-        new_node.initialize(x,y);
-        new_column.push(new_node)
+        new_column.push(new Cell(x, y))
       }
       this.grid.push(new_column);
     }
@@ -134,10 +132,13 @@ window.Board = {
   }
 };
 
-var Cell;
-Cell = function Cell() {
+var Cell = function Cell(x, y) {
+  this.initialize(x,y);
+};
 
-  Cell.prototype.initialize = function (x, y) {
+$.extend(Cell.prototype, {
+
+  initialize: function initialize(x, y) {
     this.alive = false;
     this.x = x;
     this.y = y;
@@ -145,9 +146,13 @@ Cell = function Cell() {
     this.node_div();
     this.id = "#node-" + this.x + "-" + this.y;
     this.node = $(document).find($(this.id[0]))
-  };
-
-  Cell.prototype.node_div = function () {
+  },
+  
+  id: function id(){
+    return ['node',this.x,this.y].join('-');
+  },
+  
+  node_div: function node_div() {
     this.$element = $("<div>");
     this.$element.data({
       alive: 'false',
@@ -155,10 +160,10 @@ Cell = function Cell() {
       y: this.y,
       Cell: this
     });
-    this.$element.addClass('node').attr('id, ['node'',this.x,this.y].join('-');
-  };
-
-  Cell.prototype.toggle = function () {
+    this.$element.addClass('node').attr('id', this.id());
+  },
+  
+  toggle: function toggle() {
 
     if (this.alive === true) {
       this.alive = false;
@@ -169,9 +174,9 @@ Cell = function Cell() {
     }
     
     if (GOL.testing) console.log(this.x + "-" + this.y)
-  };
-
-  Cell.prototype.nextLife = function () {
+  },
+  
+  nextLife: function nextLife() {
     aliveNeighbors = Board.neighborLife(this.x, this.y);
     testString = this.x + "-" + this.y + " "
 
@@ -195,5 +200,6 @@ Cell = function Cell() {
     }
     if (GOL.testing) console.log(testString);
 
-  };
-};
+  }
+});
+
